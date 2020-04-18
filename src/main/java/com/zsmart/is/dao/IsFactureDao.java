@@ -13,5 +13,7 @@ import org.springframework.stereotype.Repository;
 	 public IsFacture findByImpotSociete(ImpotSociete impotSociete);
 
 	 public int deleteByImpotSociete(ImpotSociete impotSociete);
+	 public IsFacture findByReferenceFacture(String reference);
+	 
 
 }

@@ -11,7 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Date; 
 import org.springframework.stereotype.Service; 
-import java.util.List; 
+import java.util.List;
+
+import com.zsmart.is.bean.Facture;
 import com.zsmart.is.bean.ImpotSociete; 
 import com.zsmart.is.service.facade.ImpotSocieteService ; 
 
@@ -103,4 +105,11 @@ query += SearchUtil.addConstraintMinMax("i", "id", idMin, idMax);
 
   return query; 
 }
+
+@Override
+public IsFacture findByReferenceFacture(String reference) {
+	return isfactureDao.findByReferenceFacture(reference);
+}
+
+
 }

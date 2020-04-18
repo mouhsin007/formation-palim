@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  *
@@ -79,7 +80,10 @@ public class ImpotSociete implements Serializable {
 	private Date dateFinalisation;
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date dateSaisie;
-
+	@Transient
+    private List<Facture> factureGains;
+    @Transient
+    private List<Facture> factureCharges;
 	
 	
 	public TauxIs getTauxIs() {
@@ -297,12 +301,33 @@ public class ImpotSociete implements Serializable {
 	public Date getDateFinalisation() {
 		return dateFinalisation;
 	}
+	  public List<Facture> getFactureGains() {
+			return factureGains;
+		}
+
+		public void setFactureGains(List<Facture> factureGains) {
+			this.factureGains = factureGains;
+		}
+
+		public List<Facture> getFactureCharges() {
+			return factureCharges;
+		}
+
+		public void setFactureCharges(List<Facture> factureCharges) {
+			this.factureCharges = factureCharges;
+		}
 
 	@Override
 	public int hashCode() {
 		int hash = 0;
 		hash += (id != null ? id.hashCode() : 0);
 		return hash;
+	}
+	
+	@Override
+	public String toString() {
+		return "ImpotSociete [totalCharge=" + totalCharge + ", totalGain=" + totalGain + ", profit=" + profit
+				+ ",annee="+anne+ "]";
 	}
 
 	@Override

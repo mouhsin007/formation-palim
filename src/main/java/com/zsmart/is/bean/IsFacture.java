@@ -6,11 +6,14 @@
 package com.zsmart.is.bean;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 /**
  *
@@ -27,6 +30,9 @@ public class IsFacture implements Serializable {
     private ImpotSociete impotSociete;
     private String referenceFacture;
     private String referenceSociete;
+    
+
+    
 
     public Long getId() {
         return id;
@@ -61,8 +67,11 @@ public class IsFacture implements Serializable {
     public void setReferenceSociete(String referenceSociete) {
         this.referenceSociete = referenceSociete;
     }
+    
 
-    @Override
+  
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);

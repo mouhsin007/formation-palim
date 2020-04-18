@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.List; 
 import com.zsmart.is.bean.TauxIs; 
 import com.zsmart.is.service.facade.TauxIsService ; 
-import com.zsmart.is.bean.EtatIs; 
-import com.zsmart.is.service.facade.EtatIsService ; 
+import com.zsmart.is.bean.EtatIs;
+import com.zsmart.is.bean.Facture;
+import com.zsmart.is.service.facade.EtatIsService ;
+import com.zsmart.is.service.facade.FactureService;
 import com.zsmart.is.service.facade.IsFactureService ; 
 import com.zsmart.is.bean.IsFacture ; 
 
@@ -43,6 +45,9 @@ import com.zsmart.is.bean.IsFacture ;
  @Autowired 
 
  private EtatIsService etatisService; 
+ @Autowired 
+ 
+ private FactureService factureService; 
 
  @Override 
 public ImpotSociete  save (ImpotSociete impotsociete){
@@ -186,5 +191,62 @@ query += SearchUtil.addConstraintMinMaxDate("i"," dateFinalisation", dateFinalis
 query += SearchUtil.addConstraintMinMaxDate("i"," dateSaisie", dateSaisieMin, dateSaisieMax);
 
   return query; 
+}
+
+@Override
+public ImpotSociete findFacturesByAnnee(Integer annee) {
+	ImpotSociete impotSociete= new ImpotSociete();
+	impotSociete.setAnne(annee);
+	List<Facture> factureCharges=factureService.factureCharge(impotSociete.getAnne());
+	List<Facture> factureGains=factureService.factureGain(impotSociete.getAnne());
+	
+	impotSociete.setFactureCharges(factureCharges);
+	impotSociete.setFactureGains(factureGains);
+	BigDecimal tvaGain=BigDecimal.ZERO;
+	BigDecimal tvaCharge=BigDecimal.ZERO;
+	
+	for (Facture facture : factureGains) {
+		tvaGain=tvaGain.add(facture.getTva());
+	}
+	impotSociete.setTotalGain(tvaGain);
+	for (Facture facture : factureCharges) {
+		tvaCharge=tvaCharge.add(facture.getTva());
+	}
+	impotSociete.setTotalCharge(tvaCharge);
+	impotSociete.setProfit(tvaGain.subtract(tvaCharge));
+	System.out.println(impotSociete);
+	return impotSociete;
+}
+@Override
+public int saveIsEtIsFacture(ImpotSociete impotSociete) {
+	ImpotSociete is=findFacturesByAnnee(impotSociete.getAnne());
+	impotSociete=is;
+	impotsocieteDao.save(impotSociete);
+	
+	for (Facture factureCharge : is.getFactureCharges()) {
+		IsFacture isf=isfactureService.findByReferenceFacture(factureCharge.getReference());
+
+		if(isf==null) {
+		IsFacture isFacture= new IsFacture();
+		isFacture.setReferenceFacture(factureCharge.getReference());
+		isFacture.setReferenceSociete(factureCharge.getReferenceSociete());
+		isFacture.setImpotSociete(is);
+		
+		isfactureService.save(isFacture);
+		}
+	}
+	for (Facture factureGain : is.getFactureGains()) {
+		IsFacture isf=isfactureService.findByReferenceFacture(factureGain.getReference());
+		if(isf==null) {
+		IsFacture isFacture= new IsFacture();
+		isFacture.setReferenceFacture(factureGain.getReference());
+		isFacture.setReferenceSociete(factureGain.getReferenceSociete());
+		isFacture.setImpotSociete(is);
+		
+		isfactureService.save(isFacture);
+		}
+	}
+	
+	return 1;
 }
 }

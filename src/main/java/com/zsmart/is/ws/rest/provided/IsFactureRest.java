@@ -13,20 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import com.zsmart.is.service.facade.IsFactureService;
+import com.zsmart.is.bean.ImpotSociete;
 import com.zsmart.is.bean.IsFacture;
 import com.zsmart.is.ws.rest.vo.IsFactureVo;
 import com.zsmart.is.ws.rest.converter.IsFactureConverter;
 import com.zsmart.is.service.util.* ;
 @RestController
-@RequestMapping("/is/IsFacture")
+@RequestMapping("/is/isFacture")
 @CrossOrigin(origins = {"http://localhost:4200"})
 public class IsFactureRest {
 
  @Autowired 
  private IsFactureService isFactureService;
 
- @Autowired 
+ 
+
+@Autowired 
 private IsFactureConverter isFactureConverter ;
+
+
 
 @PostMapping("/")
 public IsFactureVo save(@RequestBody IsFactureVo isFactureVo){

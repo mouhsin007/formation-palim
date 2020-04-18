@@ -1,6 +1,7 @@
 package com.zsmart.is.ws.rest.provided ;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,9 +25,21 @@ public class FactureRest {
 
  @Autowired 
  private FactureService factureService;
+ 
+ 
 
- @Autowired 
-private FactureConverter factureConverter ;
+
+@Autowired 
+ private FactureConverter factureConverter ;
+@GetMapping("/find-facture-charge/annee/{anne}")
+ public List<Facture> factureCharge(@PathVariable Integer anne) {
+	return factureService.factureCharge(anne);
+}
+@GetMapping("/find-facture-gain/annee/{anne}")
+public List<Facture> factureGain(@PathVariable Integer anne) {
+	return factureService.factureGain(anne);
+}
+
 
 @PostMapping("/")
 public FactureVo save(@RequestBody FactureVo factureVo){

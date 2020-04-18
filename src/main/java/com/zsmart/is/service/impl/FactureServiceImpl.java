@@ -21,7 +21,11 @@ import java.util.List;
  @Autowired 
 
  private FactureDao factureDao;
-
+ 
+ @Autowired 
+ 
+ private FactureService factureService;
+ 
  @Autowired 
 
  private EntityManager entityManager; 
@@ -128,4 +132,19 @@ query += SearchUtil.addConstraintMinMaxDate("f"," dateSaisie", dateSaisieMin, da
 
   return query; 
 }
+
+@Override
+public List<Facture> factureCharge( Integer anne) {
+	
+	return factureDao.findByAnneeAndTypeFacture( anne,"charge");
+}
+
+@Override
+public List<Facture> factureGain( Integer anne) {
+	
+	return factureDao.findByAnneeAndTypeFacture( anne, "gain");
+}
+
+
+
 }

@@ -18,14 +18,24 @@ import com.zsmart.is.ws.rest.vo.ImpotSocieteVo;
 import com.zsmart.is.ws.rest.converter.ImpotSocieteConverter;
 import com.zsmart.is.service.util.* ;
 @RestController
-@RequestMapping("/is/ImpotSociete")
+@RequestMapping("/is/impotSociete")
 @CrossOrigin(origins = {"http://localhost:4200"})
 public class ImpotSocieteRest {
 
  @Autowired 
  private ImpotSocieteService impotSocieteService;
+ 
+ 
+ @PostMapping("/save-is-et-is-facture/")
+public int saveIsEtIsFacture(@RequestBody ImpotSociete impotSociete) {
+	return impotSocieteService.saveIsEtIsFacture(impotSociete);
+}
+@GetMapping("/find-factures-by-annee/{annee}")
+ public ImpotSociete findFacturesByAnnee(@PathVariable Integer annee) {
+	return impotSocieteService.findFacturesByAnnee(annee);
+}
 
- @Autowired 
+@Autowired 
 private ImpotSocieteConverter impotSocieteConverter ;
 
 @PostMapping("/")
