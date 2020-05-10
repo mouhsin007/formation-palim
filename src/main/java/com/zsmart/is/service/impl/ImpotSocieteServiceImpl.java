@@ -1,6 +1,7 @@
 
 package com.zsmart.is.service.impl ;
 import com.zsmart.is.service.facade.ImpotSocieteService ; 
+
 import com.zsmart.is.dao.ImpotSocieteDao ;
 import com.zsmart.is.service.util.SearchUtil;
 import com.zsmart.is.bean.ImpotSociete;
@@ -20,6 +21,7 @@ import com.zsmart.is.service.facade.EtatIsService ;
 import com.zsmart.is.service.facade.FactureService;
 import com.zsmart.is.service.facade.IsFactureService ; 
 import com.zsmart.is.bean.IsFacture ; 
+import java.time.format.DateTimeFormatter;
 
  @Service  
 
@@ -192,6 +194,21 @@ query += SearchUtil.addConstraintMinMaxDate("i"," dateSaisie", dateSaisieMin, da
 
   return query; 
 }
+public BigDecimal totalTva( List<Facture> factures) {
+	BigDecimal tva=BigDecimal.ZERO;
+	for (Facture facture : factures) {
+		tva=tva.add(facture.getTva());
+	}
+	return tva;
+}
+
+public BigDecimal montantHt( List<Facture> factures) {
+	BigDecimal montant=BigDecimal.ZERO;
+	for (Facture facture : factures) {
+		montant=montant.add(facture.getTotalHt());
+	}
+	return montant;
+}
 
 @Override
 public ImpotSociete findFacturesByAnnee(Integer annee) {
@@ -199,21 +216,18 @@ public ImpotSociete findFacturesByAnnee(Integer annee) {
 	impotSociete.setAnne(annee);
 	List<Facture> factureCharges=factureService.factureCharge(impotSociete.getAnne());
 	List<Facture> factureGains=factureService.factureGain(impotSociete.getAnne());
-	
 	impotSociete.setFactureCharges(factureCharges);
 	impotSociete.setFactureGains(factureGains);
-	BigDecimal tvaGain=BigDecimal.ZERO;
-	BigDecimal tvaCharge=BigDecimal.ZERO;
-	
-	for (Facture facture : factureGains) {
-		tvaGain=tvaGain.add(facture.getTva());
-	}
-	impotSociete.setTotalGain(tvaGain);
-	for (Facture facture : factureCharges) {
-		tvaCharge=tvaCharge.add(facture.getTva());
-	}
-	impotSociete.setTotalCharge(tvaCharge);
-	impotSociete.setProfit(tvaGain.subtract(tvaCharge));
+	impotSociete.setTotalGain(totalTva(factureGains));
+	impotSociete.setTotalCharge(totalTva(factureCharges));
+	impotSociete.setProfit(montantHt(factureGains).subtract(montantHt(factureCharges)));
+	TauxIs tauxIs=tauxisService.findTauxIsByProfit(impotSociete.getProfit());
+	impotSociete.setMajoration(tauxIs.getMajoration());
+	impotSociete.setMontantMajoration(impotSociete.getProfit().multiply(impotSociete.getMajoration()));
+	impotSociete.setPenalite(tauxIs.getPenalite());
+	impotSociete.setMontantPenalite(impotSociete.getPenalite().multiply(impotSociete.getProfit()));
+	impotSociete.setMontantBaseIs(impotSociete.getProfit().multiply(tauxIs.getPercentage()));
+	impotSociete.setMontantTotal(impotSociete.getMontantBaseIs().add(impotSociete.getMontantMajoration().add(impotSociete.getMontantPenalite())));
 	System.out.println(impotSociete);
 	return impotSociete;
 }

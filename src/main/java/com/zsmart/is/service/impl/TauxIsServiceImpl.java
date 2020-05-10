@@ -105,4 +105,10 @@ query += SearchUtil.addConstraintMinMaxDate("t"," dateApplicationFin", dateAppli
 
   return query; 
 }
+
+@Override
+public TauxIs findTauxIsByProfit(BigDecimal profit) {
+	return tauxisDao.findTauxIsByProfit(profit);
+	 
+}
 }

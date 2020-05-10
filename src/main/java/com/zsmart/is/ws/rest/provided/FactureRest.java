@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ import com.zsmart.is.ws.rest.vo.FactureVo;
 import com.zsmart.is.ws.rest.converter.FactureConverter;
 import com.zsmart.is.service.util.* ;
 @RestController
-@RequestMapping("/is/Facture")
+@RequestMapping("/is/facture")
 @CrossOrigin(origins = {"http://localhost:4200"})
 public class FactureRest {
 
@@ -27,7 +28,14 @@ public class FactureRest {
  private FactureService factureService;
  
  
-
+@PostMapping("/save-list-facture/")
+public int saveListFacture(@RequestBody List<Facture> factures) {
+	return factureService.saveListFacture(factures);
+}
+@PutMapping("/ajouter-une-facture/")
+public Facture ajouter(@RequestBody Facture facture) {
+	return factureService.ajouter(facture);
+}
 
 @Autowired 
  private FactureConverter factureConverter ;

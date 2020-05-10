@@ -145,6 +145,27 @@ public List<Facture> factureGain( Integer anne) {
 	return factureDao.findByAnneeAndTypeFacture( anne, "gain");
 }
 
+@Override
+public Facture ajouter(Facture facture) {
+	Facture myClone=clone(facture);
+	Facture facture2=factureService.findByReference(facture.getReference());
+	if(facture2==null)
+		return myClone;
+	else
+	return null;
+}
+
+@Override
+public int saveListFacture(List<Facture> factures) {
+	for (Facture facture : factures) {
+	Facture	fte=factureService.findByReference(facture.getReference());
+		if(fte==null) {
+			factureService.save(facture);
+		}
+	}
+	return 1;
+}
+
 
 
 }

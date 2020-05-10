@@ -2,6 +2,9 @@ package com.zsmart.is.service.facade;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.repository.query.Param;
+
 import java.util.Date; 
 import java.math.BigDecimal; 
 import com.zsmart.is.bean.TauxIs;
@@ -16,5 +19,5 @@ public void clone(TauxIs tauxis,TauxIs tauxisClone);
 public TauxIs clone(TauxIs tauxis);
 public List<TauxIs> clone(List<TauxIs>tauxiss);
  public List<TauxIs>  findByCriteria(Long idMin,Long idMax,BigDecimal profitMinMin,BigDecimal profitMinMax,BigDecimal profitMaxMin,BigDecimal profitMaxMax,BigDecimal percentageMin,BigDecimal percentageMax,BigDecimal majorationMin,BigDecimal majorationMax,BigDecimal penaliteMin,BigDecimal penaliteMax,Date dateApplicationDebutMin,Date dateApplicationDebutMax,Date dateApplicationFinMin,Date dateApplicationFinMax);
-
+ public TauxIs findTauxIsByProfit( BigDecimal profit);
 }
